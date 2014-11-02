@@ -4,6 +4,7 @@
 #include <QFileDialog>
 #include <QStandardItemModel>
 #include <QStandardItem>
+#include <QMessageBox>
 
 #include <iostream>
 
@@ -16,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     ui->treeFull->setColumnHidden(1, true);
     connect(ui->treeFull, SIGNAL(selectedItemChanged(QTreeWidgetItem*)), this, SLOT(updateTreeSub(QTreeWidgetItem*)));
+    connect(ui->treeFull, SIGNAL(contextMenuRequested(QPoint*)), this, SLOT(createContextMenuTreeFull(QPoint*)));
     connect(this, SIGNAL(databaseChange()), this, SLOT(updateTreeFull()));
 }
 
@@ -65,7 +67,7 @@ void MainWindow::updateTreeSub(QTreeWidgetItem *item)
     Tree<Entry> *selectedTree = database.getEntries().findUsing(byId);
     if (selectedTree != nullptr)
     {
-        this->highlightedEntry = selectedTree->getRoot();
+        highlightedEntry = &selectedTree->getRoot();
         QList<QTreeWidgetItem *> subItems;
         QStringList dataPoints;
         if (selectedTree->getBranchCount() == 0)
@@ -196,11 +198,50 @@ void MainWindow::on_actionAddEntry_triggered()
 
 }
 
-void MainWindow::on_treeFull_customContextMenuRequested(const QPoint &pos)
+void MainWindow::createContextMenuTreeFull(QPoint *pos)
 {
-    //QMenu menu;
-    //QPoint globalPos = ui->treeFull->mapToGlobal(pos);
+    QTreeWidgetItem *item = ui->treeFull->itemAt(*pos);
+    if (item == nullptr)
+    {
 
-    //menu.addAction(ui->treeFull->currentItem()->text(0));
-    //menu.exec(globalPos);
+    }
+    else
+    {
+        uint64_t id = item->data(1, Qt::DisplayRole).toULongLong();
+        auto byId = [&id](Tree<Entry>* tree) -> Tree<Entry>* {return (id == tree->getRoot().getId() ? tree : nullptr);};
+        Entry *entry = &database.getEntries().findUsing(byId)->getRoot();
+        QMenu menu;
+
+        //menu.addAction(item->data(0, Qt::DisplayRole).toString());
+        menu.addAction(QString("View"));
+        menu.addAction(QString("Edit"));
+        menu.addAction(QString("Delete"));
+        QAction *selected = menu.exec(ui->treeFull->mapToGlobal(*pos));
+        if (selected != nullptr)
+        {
+            if (selected->text() == "Edit")
+                displayEntry(entry, true);
+            else if (selected->text() == "View")
+                displayEntry(entry, false);
+            else if (selected->text() == "Delete")
+            {
+                if (QMessageBox::question(this,"",QString::fromStdString("Are you sure you want to delete " + entry->getTitle()),QMessageBox::Yes | QMessageBox::No)
+                        == QMessageBox::Yes)
+                {
+                    database.removeEntry(entry->getId());
+                    emit databaseChange();
+                }
+            }
+        }
+    }
 }
+
+void MainWindow::displayEntry(Entry *entry, bool forceEditing)
+{
+    EntryDisplayWindow *edw = new EntryDisplayWindow(entry, database, forceEditing, this);
+    if (edw->exec() == 0)
+    {
+        emit databaseChange();
+    }
+}
+

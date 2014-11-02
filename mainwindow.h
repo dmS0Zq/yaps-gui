@@ -38,14 +38,16 @@ private slots:
 
     void updateTreeFull();
 
-    void on_treeFull_customContextMenuRequested(const QPoint &pos);
+    void createContextMenuTreeFull(QPoint *pos);
+
+    void displayEntry(Entry *entry, bool forceEditing);
 
 private:
     void mousePressEvent();
 
     void displayDatbase(Database *db);
     Ui::MainWindow *ui;
-    Entry highlightedEntry;
+    Entry *highlightedEntry;
 };
 
 #endif // MAINWINDOW_H

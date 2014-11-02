@@ -15,6 +15,9 @@
     <pointsize>11</pointsize>
    </font>
   </property>
+  <property name="contextMenuPolicy">
+   <enum>Qt::CustomContextMenu</enum>
+  </property>
   <property name="windowTitle">
    <string>Yaps</string>
   </property>
@@ -174,6 +177,11 @@
   <action name="actionAddEntry">
    <property name="text">
     <string>Add Entry</string>
+   </property>
+  </action>
+  <action name="actionSelectedEntry">
+   <property name="text">
+    <string>SelectedEntry</string>
    </property>
   </action>
  </widget>
