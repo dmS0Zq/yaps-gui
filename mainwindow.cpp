@@ -166,13 +166,23 @@ void MainWindow::on_actionExit_triggered()
 void MainWindow::on_treeFull_itemDoubleClicked(QTreeWidgetItem *item, int column)
 {
     uint64_t id = item->data(1, Qt::DisplayRole).toULongLong();
-    auto byId = [&id](Tree<Entry>* tree) -> Tree<Entry>* {return (id == tree->getRoot()->getId() ? tree : nullptr);};
-    Entry *entry = database.getEntries()->findUsing(byId)->getRoot();
-    EntryDisplayWindow *edw = new EntryDisplayWindow(entry, &database, false, this);
+    auto byId = [&id](Tree<Entry>* tree) -> Tree<Entry>* {return (id == tree->getRoot().getId() ? tree : nullptr);};
+    Entry entry = database.getEntries().findUsing(byId)->getRoot();
+
+    database.removeEntry(entry.getId());
+    emit databaseChange();
+
+    return;
+
+
+    /*uint64_t id = item->data(1, Qt::DisplayRole).toULongLong();
+    auto byId = [&id](Tree<Entry>* tree) -> Tree<Entry>* {return (id == tree->getRoot().getId() ? tree : nullptr);};
+    Entry *entry = &database.getEntries().findUsing(byId)->getRoot();
+    EntryDisplayWindow *edw = new EntryDisplayWindow(entry, database, false, this);
     if (edw->exec() == 0)
     {
         emit databaseChange();
-    }
+    }*/
 }
 
 void MainWindow::on_actionAddEntry_triggered()
