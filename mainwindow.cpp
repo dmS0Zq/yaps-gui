@@ -15,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->treeFull->setColumnHidden(1, true);
+    connect(ui->treeFull, SIGNAL(selectedItemChanged(QTreeWidgetItem*)), this, SLOT(updateTreeSub(QTreeWidgetItem*)));
     connect(this, SIGNAL(databaseChange()), this, SLOT(updateTreeFull()));
 }
 
@@ -43,7 +44,6 @@ void MainWindow::updateTreeFull()
 {
     ui->treeFull->setHeaderLabel(QString::fromStdString(database.getName()));
     ui->treeFull->setHeaderHidden(false);
-
     QList<QTreeWidgetItem *> items;
     for (unsigned int i = 0; i < database.getEntries().getBranchCount(); i++)
     {
@@ -51,50 +51,48 @@ void MainWindow::updateTreeFull()
     }
     while (ui->treeFull->takeTopLevelItem(0) != 0);
     ui->treeFull->insertTopLevelItems(0, items);
+
 }
 
 void MainWindow::updateTreeSub(QTreeWidgetItem *item)
 {
-    if (current == nullptr)
-    {
-
-    }
+    uint64_t id;
+    if (item == nullptr)
+        id = database.getEntries().getRoot().getId();
     else
+        id = item->data(1, Qt::DisplayRole).toULongLong();
+    auto byId = [&id](Tree<Entry>* tree) -> Tree<Entry>* {return (id == tree->getRoot().getId() ? tree : nullptr);};
+    Tree<Entry> *selectedTree = database.getEntries().findUsing(byId);
+    if (selectedTree != nullptr)
     {
-        uint64_t id = current->data(1, Qt::DisplayRole).toULongLong();
-        auto byId = [&id](Tree<Entry>* tree) -> Tree<Entry>* {return (id == tree->getRoot().getId() ? tree : nullptr);};
-        Tree<Entry> *selectedTree = database.getEntries().findUsing(byId);
-        if (selectedTree != nullptr)
+        this->highlightedEntry = selectedTree->getRoot();
+        QList<QTreeWidgetItem *> subItems;
+        QStringList dataPoints;
+        if (selectedTree->getBranchCount() == 0)
         {
-            this->highlightedEntry = selectedTree->getRoot();
-            QList<QTreeWidgetItem *> subItems;
-            QStringList dataPoints;
-            if (selectedTree->getBranchCount() == 0)
+            Entry &entry = selectedTree->getRoot();
+            dataPoints = QStringList();
+            dataPoints.push_back(QString::fromStdString(entry.getTitle()));
+            dataPoints.push_back(QString::fromStdString(entry.getUsername()));
+            dataPoints.push_back(QString::fromStdString(entry.getUrl()));
+            subItems.append(new QTreeWidgetItem((QTreeWidget*)0, dataPoints));
+        }
+        else
+        {
+            for (unsigned int i = 0; i < selectedTree->getBranchCount(); i++)
             {
-                Entry &entry = selectedTree->getRoot();
+                if (selectedTree->getBranch(i).getBranchCount() > 0)
+                    continue;
+                Entry &entry = selectedTree->getBranch(i).getRoot();
                 dataPoints = QStringList();
                 dataPoints.push_back(QString::fromStdString(entry.getTitle()));
                 dataPoints.push_back(QString::fromStdString(entry.getUsername()));
                 dataPoints.push_back(QString::fromStdString(entry.getUrl()));
                 subItems.append(new QTreeWidgetItem((QTreeWidget*)0, dataPoints));
             }
-            else
-            {
-                for (unsigned int i = 0; i < selectedTree->getBranchCount(); i++)
-                {
-                    if (selectedTree->getBranch(i).getBranchCount() > 0)
-                        continue;
-                    Entry &entry = selectedTree->getBranch(i).getRoot();
-                    dataPoints = QStringList();
-                    dataPoints.push_back(QString::fromStdString(entry.getTitle()));
-                    dataPoints.push_back(QString::fromStdString(entry.getUsername()));
-                    dataPoints.push_back(QString::fromStdString(entry.getUrl()));
-                    subItems.append(new QTreeWidgetItem((QTreeWidget*)0, dataPoints));
-                }
-            }
-            while (ui->treeSub->takeTopLevelItem(0) != 0);
-            ui->treeSub->insertTopLevelItems(0, subItems);
         }
+        while (ui->treeSub->takeTopLevelItem(0) != 0);
+        ui->treeSub->insertTopLevelItems(0, subItems);
     }
 }
 
@@ -196,4 +194,13 @@ void MainWindow::on_actionAddEntry_triggered()
         emit databaseChange();
     }
 
+}
+
+void MainWindow::on_treeFull_customContextMenuRequested(const QPoint &pos)
+{
+    //QMenu menu;
+    //QPoint globalPos = ui->treeFull->mapToGlobal(pos);
+
+    //menu.addAction(ui->treeFull->currentItem()->text(0));
+    //menu.exec(globalPos);
 }

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>528</width>
-    <height>416</height>
+    <height>417</height>
    </rect>
   </property>
   <property name="font">
@@ -22,7 +22,7 @@
    <enum>QTabWidget::Rounded</enum>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QTreeWidget" name="treeFull">
+   <widget class="FullTreeWidget" name="treeFull">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -36,8 +36,14 @@
       <pointsize>9</pointsize>
      </font>
     </property>
+    <property name="contextMenuPolicy">
+     <enum>Qt::CustomContextMenu</enum>
+    </property>
     <property name="horizontalScrollBarPolicy">
      <enum>Qt::ScrollBarAlwaysOff</enum>
+    </property>
+    <property name="indentation">
+     <number>10</number>
     </property>
     <property name="itemsExpandable">
      <bool>true</bool>
@@ -46,7 +52,7 @@
      <bool>true</bool>
     </property>
     <property name="headerHidden">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="columnCount">
      <number>2</number>
@@ -172,6 +178,13 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>FullTreeWidget</class>
+   <extends>QTreeWidget</extends>
+   <header location="global">fulltreewidget.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

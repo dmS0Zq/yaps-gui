@@ -18,7 +18,8 @@ SOURCES += main.cpp\
     DateTime.cpp \
     Entry.cpp \
     FileIO.cpp \
-    entrydisplaywindow.cpp
+    entrydisplaywindow.cpp \
+    fulltreewidget.cpp
 
 HEADERS  += mainwindow.h \
     Database.h \
@@ -27,13 +28,15 @@ HEADERS  += mainwindow.h \
     FileIO.h \
     LinkedListNode.h \
     Tree.h \
-    entrydisplaywindow.h
+    entrydisplaywindow.h \
+    fulltreewidget.h
 
 CONFIG += \
     c++11
 
 FORMS    += mainwindow.ui \
-    entrydisplaywindow.ui
+    entrydisplaywindow.ui \
+    fulltreewidget.ui
 
 OTHER_FILES += \
     deployment.pri \
