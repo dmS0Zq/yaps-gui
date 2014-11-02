@@ -22,7 +22,7 @@ signals:
     void databaseChange();
 
 private slots:
-    void on_treeFull_currentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous);
+    void updateTreeSub(QTreeWidgetItem *item);
 
     void on_actionNew_triggered();
 

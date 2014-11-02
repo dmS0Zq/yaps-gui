@@ -53,7 +53,7 @@ void MainWindow::updateTreeFull()
     ui->treeFull->insertTopLevelItems(0, items);
 }
 
-void MainWindow::on_treeFull_currentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous)
+void MainWindow::updateTreeSub(QTreeWidgetItem *item)
 {
     if (current == nullptr)
     {
