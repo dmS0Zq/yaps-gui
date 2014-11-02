@@ -16,7 +16,7 @@ class EntryDisplayWindow : public QDialog
 
 public:
     //explicit EntryDisplayWindow(Entry *ent, QWidget *parent = 0);
-    explicit EntryDisplayWindow(Entry *ent, Database *database, bool forceEditing, QWidget *parent = 0);
+    explicit EntryDisplayWindow(Entry *ent, Database &database, bool forceEditing, QWidget *parent = 0);
     ~EntryDisplayWindow();
 
 private slots:

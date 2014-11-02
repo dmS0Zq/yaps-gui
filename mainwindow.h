@@ -41,7 +41,7 @@ private slots:
 private:
     void displayDatbase(Database *db);
     Ui::MainWindow *ui;
-    Entry *highlightedEntry;
+    Entry highlightedEntry;
 };
 
 #endif // MAINWINDOW_H

@@ -6,12 +6,12 @@
 void EntryDisplayWindow::buildComboParentFromTree(QComboBox *combo, Tree<Entry> *tree, int indentation)
 {
     if (tree == nullptr) return;
-    if (tree->getRoot() == entry) return;
-    combo->addItem(QString(indentation, QChar::fromLatin1(' ')) + QString::fromStdString(tree->getRoot()->getTitle()), QVariant::fromValue(tree->getRoot()->getId()));
+    if (tree->getRoot() == *entry) return;
+    combo->addItem(QString(indentation, QChar::fromLatin1(' ')) + QString::fromStdString(tree->getRoot().getTitle()), QVariant::fromValue(tree->getRoot().getId()));
     indentation += 4;
     for (unsigned int i = 0; i < tree->getBranchCount(); i++)
     {
-        buildComboParentFromTree(combo, tree->getBranch(i), indentation);
+        buildComboParentFromTree(combo, &tree->getBranch(i), indentation);
     }
     indentation -= 4;
     return;
@@ -19,10 +19,10 @@ void EntryDisplayWindow::buildComboParentFromTree(QComboBox *combo, Tree<Entry> 
 
 int EntryDisplayWindow::getComboBoxIndexFromParentId(uint64_t parentId)
 {
-
+    return 0;
 }
 
-EntryDisplayWindow::EntryDisplayWindow(Entry *ent, Database *database, bool forceEditing, QWidget *parent) :
+EntryDisplayWindow::EntryDisplayWindow(Entry *ent, Database &database, bool forceEditing, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::EntryDisplayWindow)
 {
@@ -35,7 +35,7 @@ EntryDisplayWindow::EntryDisplayWindow(Entry *ent, Database *database, bool forc
         ui->buttonShowHidePassword->setEnabled(true);
     tmpParentId = ent->getParent();
     this->setWindowTitle("Entry: " + QString::fromStdString(entry->getTitle()));
-    buildComboParentFromTree(ui->comboParent, database->getEntries());
+    buildComboParentFromTree(ui->comboParent, &database.getEntries());
     ui->comboParent->setCurrentIndex(ui->comboParent->findData(QVariant::fromValue(tmpParentId)));
     ui->lineEditTitle->setText(QString::fromStdString(entry->getTitle()));
     ui->lineEditUsername->setText(QString::fromStdString(entry->getUsername()));
