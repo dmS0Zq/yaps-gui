@@ -32,7 +32,7 @@ private slots:
 
     void on_actionExit_triggered();
 
-    void on_treeFull_itemDoubleClicked(QTreeWidgetItem *item, int column);
+    void on_treeFull_itemDoubleClicked(QTreeWidgetItem *item);
 
     void on_actionAddEntry_triggered();
 

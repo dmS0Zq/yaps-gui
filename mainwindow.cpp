@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->treeFull->setColumnHidden(1, true);
     connect(ui->treeFull, SIGNAL(selectedItemChanged(QTreeWidgetItem*)), this, SLOT(updateTreeSub(QTreeWidgetItem*)));
     connect(ui->treeFull, SIGNAL(contextMenuRequested(QPoint*)), this, SLOT(createContextMenuTreeFull(QPoint*)));
+    connect(ui->treeFull, SIGNAL(doubleClick(QTreeWidgetItem*)), this, SLOT(on_treeFull_itemDoubleClicked(QTreeWidgetItem*)));
     connect(this, SIGNAL(databaseChange()), this, SLOT(updateTreeFull()));
 }
 
@@ -163,26 +164,17 @@ void MainWindow::on_actionExit_triggered()
 }
 
 
-void MainWindow::on_treeFull_itemDoubleClicked(QTreeWidgetItem *item, int column)
+void MainWindow::on_treeFull_itemDoubleClicked(QTreeWidgetItem *item)
 {
     uint64_t id = item->data(1, Qt::DisplayRole).toULongLong();
-    auto byId = [&id](Tree<Entry>* tree) -> Tree<Entry>* {return (id == tree->getRoot().getId() ? tree : nullptr);};
-    Entry entry = database.getEntries().findUsing(byId)->getRoot();
-
-    database.removeEntry(entry.getId());
-    emit databaseChange();
-
-    return;
-
-
-    /*uint64_t id = item->data(1, Qt::DisplayRole).toULongLong();
     auto byId = [&id](Tree<Entry>* tree) -> Tree<Entry>* {return (id == tree->getRoot().getId() ? tree : nullptr);};
     Entry *entry = &database.getEntries().findUsing(byId)->getRoot();
     EntryDisplayWindow *edw = new EntryDisplayWindow(entry, database, false, this);
     if (edw->exec() == 0)
     {
         emit databaseChange();
-    }*/
+    }
+    delete edw;
 }
 
 void MainWindow::on_actionAddEntry_triggered()
