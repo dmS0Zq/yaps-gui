@@ -45,7 +45,6 @@ private:
     Entry *entry;
 
     void buildComboParentFromTree(QComboBox *combo, Tree<Entry> *tree, int indentation = 0);
-    int getComboBoxIndexFromParentId(uint64_t parentId);
 };
 
 #endif // ENTRYDISPLAYWINDOW_H

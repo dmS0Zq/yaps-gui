@@ -17,11 +17,6 @@ void EntryDisplayWindow::buildComboParentFromTree(QComboBox *combo, Tree<Entry> 
     return;
 }
 
-int EntryDisplayWindow::getComboBoxIndexFromParentId(uint64_t parentId)
-{
-    return 0;
-}
-
 EntryDisplayWindow::EntryDisplayWindow(Entry *ent, Database &database, bool forceEditing, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::EntryDisplayWindow)
