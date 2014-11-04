@@ -143,6 +143,9 @@ void MainWindow::on_actionNew_triggered()
     e.setUrl("http://example.com");
     database.addEntry(e, database.getEntries().findUsing(byTitle)->getRoot().getId());
 
+    ui->actionSave->setEnabled(true);
+    ui->actionAddEntry->setEnabled(true);
+
     emit databaseChange();
 }
 
@@ -150,6 +153,8 @@ void MainWindow::on_actionOpen_triggered()
 {
     database = Database();
     database.readFromFile("pwsafe.yaps");
+    ui->actionSave->setEnabled(true);
+    ui->actionAddEntry->setEnabled(true);
     emit databaseChange();
 }
 
