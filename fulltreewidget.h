@@ -18,8 +18,11 @@ public:
 signals:
     void selectedItemChanged(QTreeWidgetItem *item);
     void contextMenuRequested(QPoint *pos);
-private:
+    void doubleClick(QTreeWidgetItem *item);
+private slots:
     void mousePressEvent(QMouseEvent *event);
+    void mouseDoubleClickEvent(QMouseEvent *event);
+private:
     void leftSingleClick(QMouseEvent *event);
     void rightSingleClick(QMouseEvent *event);
     void changeSelection(QMouseEvent *event);

@@ -28,6 +28,15 @@ void FullTreeWidget::mousePressEvent(QMouseEvent *event)
     }
 }
 
+void FullTreeWidget::mouseDoubleClickEvent(QMouseEvent *event)
+{
+    QModelIndex index = indexAt(event->pos());
+    if (index.row() != -1 && index.column() != -1)
+    {
+        emit doubleClick(itemAt(event->pos()));
+    }
+}
+
 void FullTreeWidget::leftSingleClick(QMouseEvent *event)
 {
     //QTreeWidgetItem *previousItem = currentSelectedItem;
