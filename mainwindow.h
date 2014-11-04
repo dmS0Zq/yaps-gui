@@ -20,7 +20,6 @@ public:
 
 signals:
     void databaseChange();
-
 private slots:
     void updateTreeSub(QTreeWidgetItem *item);
 
@@ -40,12 +39,11 @@ private slots:
 
     void createContextMenuTreeFull(QPoint *pos);
 
-    void displayEntry(Entry *entry, bool forceEditing);
-
 private:
     void mousePressEvent();
 
     void displayDatbase(Database *db);
+    int displayEntry(Entry *entry, bool forceEditing);
     Ui::MainWindow *ui;
     Entry *highlightedEntry;
 };
