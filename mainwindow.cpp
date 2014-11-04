@@ -185,14 +185,12 @@ void MainWindow::on_treeFull_itemDoubleClicked(QTreeWidgetItem *item)
 void MainWindow::on_actionAddEntry_triggered()
 {
     Entry newEntry = Entry();
-    EntryDisplayWindow *edw = new EntryDisplayWindow(&newEntry, database, true, this);
-    //connect(edw, SIGNAL(destroyed()), this, SLOT(updateTreeFull()));
-    if (edw->exec() == 0)
+    newEntry.setParent(database.getEntries().getRoot().getId());
+    if (displayEntry(&newEntry, true) == 0)
     {
         database.addEntry(newEntry, newEntry.getParent());
         emit databaseChange();
     }
-
 }
 
 void MainWindow::createContextMenuTreeFull(QPoint *pos)
@@ -217,9 +215,15 @@ void MainWindow::createContextMenuTreeFull(QPoint *pos)
         if (selected != nullptr)
         {
             if (selected->text() == "Edit")
-                displayEntry(entry, true);
+            {
+                if (displayEntry(entry, true) == 0)
+                    emit databaseChange();
+            }
             else if (selected->text() == "View")
-                displayEntry(entry, false);
+            {
+                if (displayEntry(entry, false) == 0)
+                    emit databaseChange();
+            }
             else if (selected->text() == "Delete")
             {
                 if (QMessageBox::question(this,"",QString::fromStdString("Are you sure you want to delete " + entry->getTitle()),QMessageBox::Yes | QMessageBox::No)
@@ -233,12 +237,11 @@ void MainWindow::createContextMenuTreeFull(QPoint *pos)
     }
 }
 
-void MainWindow::displayEntry(Entry *entry, bool forceEditing)
+int MainWindow::displayEntry(Entry *entry, bool forceEditing)
 {
     EntryDisplayWindow *edw = new EntryDisplayWindow(entry, database, forceEditing, this);
-    if (edw->exec() == 0)
-    {
-        emit databaseChange();
-    }
+    int result =  edw->exec();
+    delete edw;
+    return result;
 }
 
