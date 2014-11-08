@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     Entry.cpp \
     FileIO.cpp \
     entrydisplaywindow.cpp \
-    fulltreewidget.cpp
+    fulltreewidget.cpp \
+    PasswordPolicy.cpp
 
 HEADERS  += mainwindow.h \
     Database.h \
@@ -29,7 +30,8 @@ HEADERS  += mainwindow.h \
     LinkedListNode.h \
     Tree.h \
     entrydisplaywindow.h \
-    fulltreewidget.h
+    fulltreewidget.h \
+    PasswordPolicy.h
 
 CONFIG += \
     c++11
