@@ -20,7 +20,8 @@ SOURCES += main.cpp\
     FileIO.cpp \
     entrydisplaywindow.cpp \
     fulltreewidget.cpp \
-    PasswordPolicy.cpp
+    PasswordPolicy.cpp \
+    passwordpolicywindow.cpp
 
 HEADERS  += mainwindow.h \
     Database.h \
@@ -31,14 +32,16 @@ HEADERS  += mainwindow.h \
     Tree.h \
     entrydisplaywindow.h \
     fulltreewidget.h \
-    PasswordPolicy.h
+    PasswordPolicy.h \
+    passwordpolicywindow.h
 
 CONFIG += \
     c++11
 
 FORMS    += mainwindow.ui \
     entrydisplaywindow.ui \
-    fulltreewidget.ui
+    fulltreewidget.ui \
+    passwordpolicywindow.ui
 
 OTHER_FILES += \
     deployment.pri \
