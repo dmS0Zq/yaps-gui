@@ -36,6 +36,10 @@ private slots:
 
     void on_comboParent_activated(int index);
 
+    void on_buttonGenerate_clicked();
+
+    void on_buttonPasswordPolicy_clicked();
+
 private:
     Ui::EntryDisplayWindow *ui;
     bool isPasswordShown;

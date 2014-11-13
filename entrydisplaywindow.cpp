@@ -1,6 +1,6 @@
 #include "entrydisplaywindow.h"
 #include "ui_entrydisplaywindow.h"
-
+#include "passwordpolicywindow.h"
 #include "Tree.h"
 
 void EntryDisplayWindow::buildComboParentFromTree(QComboBox *combo, Tree<Entry> *tree, int indentation)
@@ -59,12 +59,12 @@ void EntryDisplayWindow::on_buttonShowHidePassword_clicked()
     if (isPasswordShown)
     {
         ui->lineEditPassword->setText(tmpPassword);
-        ui->buttonShowHidePassword->setText("Hide Password");
+        ui->buttonShowHidePassword->setText("Hide");
     }
     else
     {
         ui->lineEditPassword->setText(QString(tmpPassword.length(), QChar::fromLatin1('*')));
-        ui->buttonShowHidePassword->setText("Show Password");
+        ui->buttonShowHidePassword->setText("Show");
     }
 }
 
@@ -144,4 +144,30 @@ void EntryDisplayWindow::on_comboParent_activated(int index)
     ui->labelParent->setText("<b><i>Parent</i></b>");
     ui->buttonClose->setText("Discard and Close");
     ui->buttonSaveClose->setEnabled(true);
+}
+
+void EntryDisplayWindow::on_buttonGenerate_clicked()
+{
+    PasswordPolicy pp = PasswordPolicy();
+    pp.setLength(5);
+    pp.setClassRequired(PasswordPolicy::DIGITS);
+    pp.setClassRequired(PasswordPolicy::LOW_ALPHAS);
+    pp.setClassRequired(PasswordPolicy::SPACE);
+    entry->setPasswordPolicy(pp);
+    tmpPassword = QString::fromStdString(entry->generatePassword());
+    if (isPasswordShown)
+        ui->lineEditPassword->setText(tmpPassword);
+    else
+        ui->lineEditPassword->setText(QString(tmpPassword.length(), QChar::fromLatin1('*')));
+}
+
+void EntryDisplayWindow::on_buttonPasswordPolicy_clicked()
+{
+    PasswordPolicy *pp = new PasswordPolicy(entry->getPasswordPolicy());
+    PasswordPolicyWindow *ppw = new PasswordPolicyWindow(pp);
+    if (ppw->exec() == 0)
+    {
+
+    }
+    delete ppw;
 }
