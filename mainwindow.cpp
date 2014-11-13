@@ -6,8 +6,6 @@
 #include <QStandardItem>
 #include <QMessageBox>
 
-#include <iostream>
-
 Database database;
 
 MainWindow::MainWindow(QWidget *parent) :
