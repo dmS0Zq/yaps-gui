@@ -6,29 +6,29 @@ PasswordPolicyWindow::PasswordPolicyWindow(PasswordPolicy *pp, QWidget *parent) 
     ui(new Ui::PasswordPolicyWindow)
 {
     ui->setupUi(this);
-    policy = *pp;
-    ui->checkLowAlpha->setChecked(policy.getClassRequired(PasswordPolicy::LOW_ALPHAS));
-    ui->checkHighAlpha->setChecked(policy.getClassRequired(PasswordPolicy::UPPER_ALPHAS));
-    ui->checkDigits->setChecked(policy.getClassRequired(PasswordPolicy::DIGITS));
-    ui->checkSymbols->setChecked(policy.getClassRequired(PasswordPolicy::SYMBOLS));
-    ui->checkSpace->setChecked(policy.getClassRequired(PasswordPolicy::SPACE));
-    ui->spinLowAlpha->setValue(policy.getClassMinimum(PasswordPolicy::LOW_ALPHAS));
-    ui->spinHighAlpha->setValue(policy.getClassMinimum(PasswordPolicy::UPPER_ALPHAS));
-    ui->spinDigits->setValue(policy.getClassMinimum(PasswordPolicy::DIGITS));
-    ui->spinSymbols->setValue(policy.getClassMinimum(PasswordPolicy::SYMBOLS));
-    ui->spinSpace->setValue(policy.getClassMinimum(PasswordPolicy::SPACE));
+    policy = pp;
+    ui->checkLowAlpha->setChecked(policy->getClassRequired(PasswordPolicy::LOW_ALPHAS));
+    ui->checkHighAlpha->setChecked(policy->getClassRequired(PasswordPolicy::UPPER_ALPHAS));
+    ui->checkDigits->setChecked(policy->getClassRequired(PasswordPolicy::DIGITS));
+    ui->checkSymbols->setChecked(policy->getClassRequired(PasswordPolicy::SYMBOLS));
+    ui->checkSpace->setChecked(policy->getClassRequired(PasswordPolicy::SPACE));
+    ui->spinLowAlpha->setValue(policy->getClassMinimum(PasswordPolicy::LOW_ALPHAS));
+    ui->spinHighAlpha->setValue(policy->getClassMinimum(PasswordPolicy::UPPER_ALPHAS));
+    ui->spinDigits->setValue(policy->getClassMinimum(PasswordPolicy::DIGITS));
+    ui->spinSymbols->setValue(policy->getClassMinimum(PasswordPolicy::SYMBOLS));
+    ui->spinSpace->setValue(policy->getClassMinimum(PasswordPolicy::SPACE));
     ui->spinLowAlpha->setEnabled(ui->checkLowAlpha->isChecked());
     ui->spinHighAlpha->setEnabled(ui->checkHighAlpha->isChecked());
     ui->spinDigits->setEnabled(ui->checkDigits->isChecked());
     ui->spinSymbols->setEnabled(ui->checkSymbols->isChecked());
     ui->spinSpace->setEnabled(ui->checkSpace->isChecked());
-    ui->checkDiffMinMaxLength->setChecked(policy.getMinLength() != policy.getMaxLength());
-    ui->spinMinLegnth->setValue(policy.getMinLength());
-    ui->spinMaxLength->setValue(policy.getMaxLength());
+    ui->checkDiffMinMaxLength->setChecked(policy->getMinLength() != policy->getMaxLength());
+    ui->spinMinLegnth->setValue(policy->getMinLength());
+    ui->spinMaxLength->setValue(policy->getMaxLength());
     ui->spinMaxLength->setEnabled(ui->checkDiffMinMaxLength->isChecked());
-    ui->checkMode->setChecked(policy.getMode() == PasswordPolicy::SPECIAL_MODE);
+    ui->checkMode->setChecked(policy->getMode() == PasswordPolicy::SPECIAL_MODE);
     ui->lineEditAlphabet->setEnabled(ui->checkMode->isChecked());
-    ui->lineEditAlphabet->setText(QString::fromStdString(policy.getSpecialCharset()));
+    ui->lineEditAlphabet->setText(QString::fromStdString(policy->getSpecialCharset()));
 }
 
 PasswordPolicyWindow::~PasswordPolicyWindow()
@@ -42,7 +42,7 @@ void PasswordPolicyWindow::on_spinMinLegnth_valueChanged(int arg1)
         ui->spinMaxLength->setValue(arg1);
     else if (arg1 > ui->spinMaxLength->value())
         ui->spinMinLegnth->setValue(ui->spinMaxLength->value());
-    policy.setLength(ui->spinMinLegnth->value(), ui->spinMaxLength->value());
+    policy->setLength(ui->spinMinLegnth->value(), ui->spinMaxLength->value());
 }
 
 void PasswordPolicyWindow::on_spinMaxLength_valueChanged(int arg1)
@@ -51,7 +51,7 @@ void PasswordPolicyWindow::on_spinMaxLength_valueChanged(int arg1)
         ui->spinMinLegnth->setValue(arg1);
     else if (arg1 < ui->spinMinLegnth->value())
         ui->spinMaxLength->setValue(ui->spinMinLegnth->value());
-    policy.setLength(ui->spinMinLegnth->value(), ui->spinMaxLength->value());
+    policy->setLength(ui->spinMinLegnth->value(), ui->spinMaxLength->value());
 }
 
 void PasswordPolicyWindow::on_checkDiffMinMaxLength_stateChanged(int arg1)
@@ -75,16 +75,16 @@ void PasswordPolicyWindow::on_checkMode_stateChanged(int arg1)
     ui->spinSpace->setEnabled(arg1 != Qt::Checked);
     ui->lineEditAlphabet->setEnabled(arg1 == Qt::Checked);
     if (arg1 == Qt::Unchecked)
-        policy.setMode(PasswordPolicy::NORMAL_MODE);
+        policy->setMode(PasswordPolicy::NORMAL_MODE);
     else
-        policy.setMode(PasswordPolicy::SPECIAL_MODE);
+        policy->setMode(PasswordPolicy::SPECIAL_MODE);
 }
 
 void PasswordPolicyWindow::on_buttonTest_clicked()
 {
     try
     {
-        ui->lineEditTest->setText(QString::fromStdString(policy.generate()));
+        ui->lineEditTest->setText(QString::fromStdString(policy->generate()));
     }
     catch (std::exception e)
     {
@@ -94,12 +94,12 @@ void PasswordPolicyWindow::on_buttonTest_clicked()
 
 void PasswordPolicyWindow::changeClassEnabled(PasswordPolicy::CharacterClass cc, bool enabled)
 {
-    policy.setClassEnabled(cc, enabled);
+    policy->setClassEnabled(cc, enabled);
 }
 
 void PasswordPolicyWindow::changeClassMinimum(PasswordPolicy::CharacterClass cc, int minimum)
 {
-    policy.setClassMinimum(cc, minimum);
+    policy->setClassMinimum(cc, minimum);
 }
 
 void PasswordPolicyWindow::on_checkLowAlpha_stateChanged(int arg1)
@@ -145,29 +145,74 @@ void PasswordPolicyWindow::on_checkSpace_stateChanged(int arg1)
 void PasswordPolicyWindow::on_spinLowAlpha_valueChanged(int arg1)
 {
     changeClassMinimum(PasswordPolicy::LOW_ALPHAS, arg1);
+    ui->checkLowAlpha->setChecked(true);
 }
 
 void PasswordPolicyWindow::on_spinHighAlpha_valueChanged(int arg1)
 {
     changeClassMinimum(PasswordPolicy::UPPER_ALPHAS, arg1);
+    ui->checkHighAlpha->setChecked(true);
 }
 
 void PasswordPolicyWindow::on_spinDigits_valueChanged(int arg1)
 {
     changeClassMinimum(PasswordPolicy::DIGITS, arg1);
+    ui->checkDigits->setChecked(true);
 }
 
 void PasswordPolicyWindow::on_spinSymbols_valueChanged(int arg1)
 {
     changeClassMinimum(PasswordPolicy::SYMBOLS, arg1);
+    ui->checkSymbols->setChecked(true);
 }
 
 void PasswordPolicyWindow::on_spinSpace_valueChanged(int arg1)
 {
     changeClassMinimum(PasswordPolicy::SPACE, arg1);
+    ui->checkSpace->setChecked(true);
 }
 
 void PasswordPolicyWindow::on_lineEditAlphabet_textChanged(const QString &arg1)
 {
-    policy.setSpecialCharset(arg1.toStdString());
+    policy->setSpecialCharset(arg1.toStdString());
+}
+
+void PasswordPolicyWindow::on_comboDefaults_activated(int index)
+{
+    switch (index)
+    {
+    case 1: // hexadecimal
+        ui->checkMode->setChecked(true);
+        ui->lineEditAlphabet->setText("0123456789abcdef");
+        ui->checkDiffMinMaxLength->setChecked(false);
+        ui->spinMinLegnth->setValue(24);
+        break;
+    case 2: // all but spaces
+        ui->checkMode->setChecked(false);
+        ui->spinLowAlpha->setValue(0);
+        ui->spinHighAlpha->setValue(1);
+        ui->spinDigits->setValue(2);
+        ui->spinSymbols->setValue(2);
+        ui->checkSpace->setChecked(false);
+        ui->checkDiffMinMaxLength->setChecked(true);
+        ui->spinMinLegnth->setValue(12);
+        ui->spinMaxLength->setValue(16);
+        break;
+    case 3: // base 58
+        ui->checkMode->setChecked(true);
+        ui->lineEditAlphabet->setText("123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz");
+        ui->checkDiffMinMaxLength->setChecked(false);
+        ui->spinMinLegnth->setValue(16);
+        break;
+    }
+}
+
+void PasswordPolicyWindow::on_buttonSaveClose_clicked()
+{
+    this->done(0); // indicates change
+}
+
+void PasswordPolicyWindow::on_buttonClose_clicked()
+{
+    this->done(1); // indicates no change
 }

@@ -49,9 +49,15 @@ private slots:
 
     void on_lineEditAlphabet_textChanged(const QString &arg1);
 
+    void on_comboDefaults_activated(int index);
+
+    void on_buttonSaveClose_clicked();
+
+    void on_buttonClose_clicked();
+
 private:
     Ui::PasswordPolicyWindow *ui;
-    PasswordPolicy policy;
+    PasswordPolicy *policy;
 
     void changeClassEnabled(PasswordPolicy::CharacterClass cc, bool enabled);
     void changeClassMinimum(PasswordPolicy::CharacterClass cc, int minimum);
