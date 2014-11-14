@@ -34,7 +34,6 @@ EntryDisplayWindow::EntryDisplayWindow(Entry *ent, Database &database, bool forc
     ui->comboParent->setCurrentIndex(ui->comboParent->findData(QVariant::fromValue(tmpParentId)));
     ui->lineEditTitle->setText(QString::fromStdString(entry->getTitle()));
     ui->lineEditUsername->setText(QString::fromStdString(entry->getUsername()));
-    ui->lineEditPassword->setText(QString((int)entry->getPassword().length(), QChar::fromLatin1('*')));
     ui->dateTimeEditCreated->setDateTime(QDateTime::fromString(QString::fromStdString(entry->getCreated()), QString("yyyy-MM-dd HH:mm:ss")));
     ui->dateTimeEditModified->setDateTime(QDateTime::fromString(QString::fromStdString(entry->getModified()), QString("yyyy-MM-dd HH:mm:ss")));
     if (forceEditing)
