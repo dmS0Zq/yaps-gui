@@ -71,21 +71,18 @@ void EntryDisplayWindow::on_buttonShowHidePassword_clicked()
 void EntryDisplayWindow::on_buttonEditing_clicked()
 {
     isEditing = !isEditing;
+    ui->comboParent->setDisabled(!isEditing);
+    ui->lineEditTitle->setReadOnly(!isEditing);
+    ui->lineEditUsername->setReadOnly(!isEditing);
+    ui->lineEditPassword->setReadOnly(!isEditing);
+    ui->buttonPasswordPolicy->setEnabled(isEditing);
     if (isEditing)
     {
-        ui->comboParent->setDisabled(false);
-        ui->lineEditTitle->setReadOnly(false);
-        ui->lineEditUsername->setReadOnly(false);
-        ui->lineEditPassword->setReadOnly(false);
         ui->buttonEditing->setText("Disable Editing");
         ui->buttonShowHidePassword->setEnabled(false);
     }
     else
     {
-        ui->comboParent->setDisabled(true);
-        ui->lineEditTitle->setReadOnly(true);
-        ui->lineEditUsername->setReadOnly(true);
-        ui->lineEditPassword->setReadOnly(true);
         ui->buttonEditing->setText("Enable Editing");
         if (tmpPassword.length() > 1)
             ui->buttonShowHidePassword->setEnabled(true);
