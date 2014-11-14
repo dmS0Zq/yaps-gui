@@ -42,6 +42,7 @@ EntryDisplayWindow::EntryDisplayWindow(Entry *ent, Database &database, bool forc
         on_buttonEditing_clicked();
         ui->buttonEditing->setEnabled(false);
     }
+    ui->buttonPasswordPolicy->setEnabled(forceEditing);
     isPasswordShown = forceEditing;
     isEditing = forceEditing;
     if (isPasswordShown) ui->lineEditPassword->setText(QString::fromStdString(entry->getPassword()));
@@ -148,13 +149,16 @@ void EntryDisplayWindow::on_comboParent_activated(int index)
 
 void EntryDisplayWindow::on_buttonGenerate_clicked()
 {
-    PasswordPolicy pp = PasswordPolicy();
-    pp.setLength(5);
-    pp.setClassRequired(PasswordPolicy::DIGITS);
-    pp.setClassRequired(PasswordPolicy::LOW_ALPHAS);
-    pp.setClassRequired(PasswordPolicy::SPACE);
-    entry->setPasswordPolicy(pp);
-    tmpPassword = QString::fromStdString(entry->generatePassword());
+    try
+    {
+        tmpPassword = QString::fromStdString(entry->generatePassword());
+        ui->labelPassword->setText("<b><i>Password</i></b>");
+        ui->buttonSaveClose->setEnabled(true);
+    }
+    catch (std::exception e)
+    {
+        ui->lineEditPassword->setText("");
+    }
     if (isPasswordShown)
         ui->lineEditPassword->setText(tmpPassword);
     else
@@ -165,9 +169,17 @@ void EntryDisplayWindow::on_buttonPasswordPolicy_clicked()
 {
     PasswordPolicy *pp = new PasswordPolicy(entry->getPasswordPolicy());
     PasswordPolicyWindow *ppw = new PasswordPolicyWindow(pp);
-    if (ppw->exec() == 0)
+    if (ppw->exec() == 0) // indiciates change, or that want to keep what was done
     {
-
+        entry->setPasswordPolicy(*pp);
     }
+    delete pp;
     delete ppw;
+}
+
+void EntryDisplayWindow::on_lineEditPassword_textChanged(const QString &arg1)
+{
+    if (ui->lineEditPassword->text().length() > 0)
+        if (!isEditing)
+            ui->buttonShowHidePassword->setEnabled(true);
 }

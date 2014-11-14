@@ -40,6 +40,8 @@ private slots:
 
     void on_buttonPasswordPolicy_clicked();
 
+    void on_lineEditPassword_textChanged(const QString &arg1);
+
 private:
     Ui::EntryDisplayWindow *ui;
     bool isPasswordShown;
