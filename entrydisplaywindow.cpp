@@ -110,14 +110,12 @@ void EntryDisplayWindow::on_lineEditTitle_textEdited(const QString &arg1)
 {
     ui->labelTitle->setText("<b><i>Title</i></b>");
     this->setWindowTitle("Entry: " + arg1);
-    ui->buttonClose->setText("Discard and Close");
     ui->buttonSaveClose->setEnabled(true);
 }
 
 void EntryDisplayWindow::on_lineEditUsername_textEdited(const QString &arg1)
 {
     ui->labelUsername->setText("<b><i>Username</i></b>");
-    ui->buttonClose->setText("Discard and Close");
     ui->buttonSaveClose->setEnabled(true);
 }
 
@@ -129,7 +127,6 @@ void EntryDisplayWindow::on_lineEditPassword_textEdited(const QString &arg1)
         ui->buttonShowHidePassword->setEnabled(false);
     else if (!isEditing)
         ui->buttonShowHidePassword->setEnabled(true);
-    ui->buttonClose->setText("Discard and Close");
     ui->buttonSaveClose->setEnabled(true);
 }
 
@@ -139,7 +136,6 @@ void EntryDisplayWindow::on_comboParent_activated(int index)
         return;
     tmpParentId = ui->comboParent->currentData().toULongLong();
     ui->labelParent->setText("<b><i>Parent</i></b>");
-    ui->buttonClose->setText("Discard and Close");
     ui->buttonSaveClose->setEnabled(true);
 }
 
